@@ -1,9 +1,18 @@
 package com.gmail.lucasffrezende.view;
 
+import com.gmail.lucasffrezende.entities.Participante;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
@@ -14,6 +23,9 @@ import javax.swing.table.DefaultTableModel;
 public class TelaPrincipal extends javax.swing.JFrame {
 
     private DefaultTableModel tableModel;
+    private List<Integer> indicesSorteados = new ArrayList<>();
+    private StringBuilder nomesBairrosSorteados = new StringBuilder();
+    private Connection conexao;
 
     public TelaPrincipal() {
         initComponents();
@@ -45,8 +57,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         menuAjustes = new javax.swing.JMenu();
         menuLimpar = new javax.swing.JMenuItem();
+        menuSalvar = new javax.swing.JMenuItem();
+        menuImportar = new javax.swing.JMenuItem();
         menuAjuda = new javax.swing.JMenu();
         menuInfo = new javax.swing.JMenuItem();
+        menuUltimosSort = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("sorteadorEducadora - Tela Principal");
@@ -123,6 +138,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         menuAjustes.add(menuLimpar);
 
+        menuSalvar.setText("Salvar Dados");
+        menuSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSalvarActionPerformed(evt);
+            }
+        });
+        menuAjustes.add(menuSalvar);
+
+        menuImportar.setText("Importar Dados");
+        menuImportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuImportarActionPerformed(evt);
+            }
+        });
+        menuAjustes.add(menuImportar);
+
         jMenuBar1.add(menuAjustes);
 
         menuAjuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/8. ajuda.png"))); // NOI18N
@@ -138,6 +169,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
         menuAjuda.add(menuInfo);
+
+        menuUltimosSort.setText("Últimos sorteados");
+        menuUltimosSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuUltimosSortActionPerformed(evt);
+            }
+        });
+        menuAjuda.add(menuUltimosSort);
 
         jMenuBar1.add(menuAjuda);
 
@@ -258,6 +297,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bairroFieldKeyPressed
 
+    private void menuSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalvarActionPerformed
+        // TODO add your handling code here:
+        salvarDadosNoBanco();
+    }//GEN-LAST:event_menuSalvarActionPerformed
+
+    private void menuImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuImportarActionPerformed
+        // TODO add your handling code here:
+        importarDados();
+    }//GEN-LAST:event_menuImportarActionPerformed
+
+    private void menuUltimosSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUltimosSortActionPerformed
+        // TODO add your handling code here:
+        exibirUltimosSorteados();
+    }//GEN-LAST:event_menuUltimosSortActionPerformed
+
     private void adicionarNomeBairro() {
         String nome = nomeField.getText();
         String bairro = bairroField.getText();
@@ -267,40 +321,262 @@ public class TelaPrincipal extends javax.swing.JFrame {
             return;
         }
 
+        // Verificar se o nome e bairro já existem na tabela
+        if (isNomeBairroRepetido(nome, bairro)) {
+            JOptionPane.showMessageDialog(null, "Nome e bairro já existem na tabela!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         tableModel.addRow(new Object[]{nome, bairro});
         nomeField.setText("");
         bairroField.setText("");
     }
 
+    private boolean isNomeBairroRepetido(String nome, String bairro) {
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String nomeTabela = (String) tableModel.getValueAt(i, 0);
+            String bairroTabela = (String) tableModel.getValueAt(i, 1);
+
+            if (nomeTabela.equals(nome) && bairroTabela.equals(bairro)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void sortearNomes() {
-        int numSorteios = Integer.parseInt(JOptionPane.showInputDialog("Quantos nomes deseja sortear?"));
-        int numPessoas = tableModel.getRowCount();
-        if (numSorteios > numPessoas) {
-            JOptionPane.showMessageDialog(null, "Não há pessoas suficientes para sortear.");
+        // Obter a quantidade de pessoas a serem sorteadas
+        int quantidadeSorteio = Integer.parseInt(JOptionPane.showInputDialog("Quantas pessoas serão sorteadas?"));
+
+        // Obter os dados da JTable
+        tableModel = (DefaultTableModel) tbtModel.getModel();
+        int rowCount = tableModel.getRowCount();
+
+        if (rowCount == 0) {
+            JOptionPane.showMessageDialog(null, "Não há participantes para realizar o sorteio!", "Sortear", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        List<Integer> indicesSorteados = new ArrayList<>();
+        if (quantidadeSorteio > rowCount) {
+            JOptionPane.showMessageDialog(null, "A quantidade de pessoas a serem sorteadas é maior do que o número de participantes!", "Sortear", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Realizar o sorteio
         Random random = new Random();
-        while (indicesSorteados.size() < numSorteios) {
-            int indiceSorteado = random.nextInt(numPessoas);
+        List<Integer> indicesSorteados = new ArrayList<>();
+
+        while (indicesSorteados.size() < quantidadeSorteio) {
+            int indiceSorteado = random.nextInt(rowCount);
+
             if (!indicesSorteados.contains(indiceSorteado)) {
                 indicesSorteados.add(indiceSorteado);
             }
         }
 
-        StringBuilder resultado = new StringBuilder();
+        // Exibir os nomes e bairros sorteados em um JOptionPane
+        StringBuilder nomesBairrosSorteados = new StringBuilder();
         for (int indice : indicesSorteados) {
-            String nome = (String) tableModel.getValueAt(indice, 0);
-            String bairro = (String) tableModel.getValueAt(indice, 1);
-            resultado.append("Nome: ").append(nome).append(" | Bairro: ").append(bairro).append("\n");
-            JOptionPane.showMessageDialog(null, "Nomes Sorteados:\n" + resultado.toString());
+            String nomeSorteado = (String) tableModel.getValueAt(indice, 0);
+            String bairroSorteado = (String) tableModel.getValueAt(indice, 1);
+            nomesBairrosSorteados.append("Nome: ").append(nomeSorteado).append(", Bairro: ").append(bairroSorteado).append("\n");
+        }
 
+        JOptionPane.showMessageDialog(null, "Pessoa(s) sorteada(s):\n" + nomesBairrosSorteados.toString(), "Sortear", JOptionPane.INFORMATION_MESSAGE);
+
+        // Obter os nomes sorteados e enviar para o banco de dados
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/educadora_db", "root", "1234")) {
+            for (int indice : indicesSorteados) {
+                String nomeSorteado = (String) tableModel.getValueAt(indice, 0);
+
+                // Salvar os dados do sorteio na tabela "sorteios" do banco de dados
+                String inserirSorteio = "INSERT INTO sorteios (nome_ganhador, data_sorteio) VALUES (?, ?)";
+                PreparedStatement stmtInserirSorteio = conn.prepareStatement(inserirSorteio);
+                stmtInserirSorteio.setString(1, nomeSorteado);
+                stmtInserirSorteio.setDate(2, new java.sql.Date(new Date().getTime()));
+                stmtInserirSorteio.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(null, "Sorteio realizado com sucesso!", "Sortear", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao realizar o sorteio!", "Sortear", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public class Conexao {
+
+        private static final String URL = "jdbc:mysql://localhost:3306/educadora_db";
+        private static final String USUARIO = "root";
+        private static final String SENHA = "1234";
+
+        public static Connection obterConexao() throws SQLException {
+            return DriverManager.getConnection(URL, USUARIO, SENHA);
+        }
+    }
+
+    private void exibirUltimosSorteados() {
+        try {
+            Connection conexao = Conexao.obterConexao();
+
+            String sql = "SELECT nome_ganhador, data_sorteio FROM sorteios ORDER BY data_sorteio DESC LIMIT 5";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            StringBuilder resultado = new StringBuilder();
+            while (resultSet.next()) {
+                String nome = resultSet.getString("nome_ganhador");
+                LocalDate dataSorteio = resultSet.getDate("data_sorteio").toLocalDate();
+                resultado.append("Nome: ").append(nome).append(", Data do Sorteio: ").append(dataSorteio).append("\n");
+            }
+
+            if (resultado.length() > 0) {
+                JOptionPane.showMessageDialog(this, "Últimos sorteados:\n" + resultado.toString(), "Últimos Sorteados", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nenhum sorteio realizado.", "Últimos Sorteados", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            statement.close();
+            conexao.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao obter os últimos sorteados.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void limparTabela() {
         tableModel.setRowCount(0);
+    }
+
+    private void salvarDadosNoBanco() {
+        try {
+            // Estabelecer a conexão com o banco de dados
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/educadora_db", "root", "1234");
+
+            // Preparar a declaração SQL para verificação de duplicidade
+            String verificaDuplicidade = "SELECT COUNT(*) FROM participantes WHERE nome = ? AND bairro = ?";
+            PreparedStatement stmtVerificaDuplicidade = conn.prepareStatement(verificaDuplicidade);
+
+            // Preparar a declaração SQL para inserção dos nomes
+            String inserirParticipante = "INSERT INTO participantes (nome, bairro) VALUES (?, ?)";
+            PreparedStatement stmtInserirParticipante = conn.prepareStatement(inserirParticipante);
+
+            // Obter os dados da JTable
+            tableModel = (DefaultTableModel) tbtModel.getModel();
+            int rowCount = tableModel.getRowCount();
+
+            // Inserir cada nome no banco de dados
+            for (int i = 0; i < rowCount; i++) {
+                String nome = (String) tableModel.getValueAt(i, 0);
+                String bairro = (String) tableModel.getValueAt(i, 1);
+
+                // Verificar duplicidade
+                stmtVerificaDuplicidade.setString(1, nome);
+                stmtVerificaDuplicidade.setString(2, bairro);
+                ResultSet rs = stmtVerificaDuplicidade.executeQuery();
+                rs.next();
+                int count = rs.getInt(1);
+
+                if (count > 0) {
+                    // Nome e bairro já existem no banco de dados, exibir mensagem de erro
+                    JOptionPane.showMessageDialog(null, "Nome e bairro já existem: " + nome + ", " + bairro, "Erro de Duplicidade", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Inserir no banco de dados
+                    stmtInserirParticipante.setString(1, nome);
+                    stmtInserirParticipante.setString(2, bairro);
+                    stmtInserirParticipante.executeUpdate();
+                    atualizarDados(nome, bairro);
+                }
+                rs.close();
+            }
+
+            // Fechar as declarações e a conexão com o banco de dados
+            stmtVerificaDuplicidade.close();
+            stmtInserirParticipante.close();
+            conn.close();
+
+            JOptionPane.showMessageDialog(null, "Dados salvos com sucesso!", "Salvar Dados", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao salvar os dados!", "Salvar Dados", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void importarDados() {
+        // Verificar se os dados já foram importados
+        if (tableModel.getRowCount() > 0) {
+            JOptionPane.showMessageDialog(this, "Os dados já foram importados.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Obter os nomes e bairros da tabela "participantes" do banco de dados
+        List<Participante> participantes = obterParticipantesDoBanco();
+
+        // Adicionar os nomes e bairros à jTable
+        for (Participante participante : participantes) {
+            tableModel.addRow(new Object[]{participante.getNome(), participante.getBairro()});
+        }
+    }
+
+    private List<Participante> obterParticipantesDoBanco() {
+        List<Participante> participantes = new ArrayList<>();
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/educadora_db", "root", "1234");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM participantes");
+
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                String bairro = rs.getString("bairro");
+
+                participantes.add(new Participante(nome, bairro));
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return participantes;
+    }
+
+    private void salvarDados() {
+        String nome = nomeField.getText();
+        String bairro = nomeField.getText();
+
+        // Verificar se o nome já existe na tabela
+        if (verificarNomeExistente(nome)) {
+            // Atualizar os dados para o nome existente
+            atualizarDados(nome, bairro);
+        } else {
+            // Adicionar um novo registro na jTable
+            tableModel.addRow(new Object[]{nome, bairro});
+        }
+
+    }
+
+    private boolean verificarNomeExistente(String nome) {
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String nomeTabela = (String) tableModel.getValueAt(i, 0);
+            if (nomeTabela.equalsIgnoreCase(nome)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void atualizarDados(String nome, String bairro) {
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String nomeTabela = (String) tableModel.getValueAt(i, 0);
+            if (nomeTabela.equalsIgnoreCase(nome)) {
+                tableModel.setValueAt(bairro, i, 1);
+                break;
+            }
+        }
     }
 
     public static void main(String args[]) {
@@ -338,8 +614,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel labelNome;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenu menuAjustes;
+    private javax.swing.JMenuItem menuImportar;
     private javax.swing.JMenuItem menuInfo;
     private javax.swing.JMenuItem menuLimpar;
+    private javax.swing.JMenuItem menuSalvar;
+    private javax.swing.JMenuItem menuUltimosSort;
     private javax.swing.JTextField nomeField;
     private javax.swing.JButton sairButton;
     private javax.swing.JButton sortearButton;
