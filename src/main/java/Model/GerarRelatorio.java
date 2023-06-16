@@ -20,7 +20,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
 
 public class GerarRelatorio {
 
@@ -88,7 +87,7 @@ public class GerarRelatorio {
                 String arquivoPDF = personalizarNomeArquivo(nomeParticipante);
                 JasperExportManager.exportReportToPdfFile(jasperPrint, arquivoPDF);
 
-                System.out.println("Relatório gerado com sucesso!");
+                view.mensagemSimples("Vale-Brinde gerado com sucesso.");
             } catch (JRException e) {
                 e.printStackTrace();
             }

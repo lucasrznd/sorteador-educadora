@@ -1,6 +1,7 @@
 package Model.DAO;
 
 import Model.Exception.SorteioException;
+import Model.Locutor;
 import Model.Participante;
 import Model.Sorteio;
 import java.sql.Connection;
@@ -23,14 +24,20 @@ public class SorteioDAO {
 
     public void insert(Sorteio sorteio) {
         try {
-            String sql = "INSERT INTO sorteio (nome_ganhador, bairro, data_sorteio) VALUES (?, ?, ?)";
-            PreparedStatement smtInsert = conexao.prepareStatement(sql);
-            smtInsert.setString(1, sorteio.getParticipante().getNome());
-            smtInsert.setString(2, sorteio.getParticipante().getBairro());
-            smtInsert.setTimestamp(3, Timestamp.valueOf(sorteio.getDataSorteio()));
-            smtInsert.executeUpdate();
+            String sql = "INSERT INTO sorteio (nome_ganhador, bairro, data_sorteio, nome_locutor, brinde, quantidade, empresa_referencia) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+            statement.setString(1, sorteio.getParticipante().getNome());
+            statement.setString(2, sorteio.getParticipante().getBairro());
+            statement.setTimestamp(3, Timestamp.valueOf(sorteio.getDataSorteio()));
+            statement.setString(4, sorteio.getLocutor().getNome());
+            statement.setString(5, sorteio.getBrinde().getItem().getDescricao());
+            statement.setString(6, sorteio.getBrinde().getQuantidade());
+            statement.setString(7, sorteio.getEmpresaReferencia().getNome());
 
-            smtInsert.close();
+            statement.executeUpdate();
+
+            statement.close();
             conexao.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,7 +49,7 @@ public class SorteioDAO {
         List<Sorteio> ultimosSorteios = new ArrayList<>();
 
         try {
-            String sql = "SELECT nome_ganhador, bairro, data_sorteio FROM sorteio ORDER BY data_sorteio DESC LIMIT ?";
+            String sql = "SELECT nome_ganhador, bairro, data_sorteio, nome_locutor FROM sorteio ORDER BY data_sorteio DESC LIMIT ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
             statement.setInt(1, quantidade);
             ResultSet resultSet = statement.executeQuery();
@@ -51,6 +58,7 @@ public class SorteioDAO {
                 String nome = resultSet.getString("nome_ganhador");
                 String bairro = resultSet.getString("bairro");
                 LocalDateTime dataSorteio = resultSet.getTimestamp("data_sorteio").toLocalDateTime();
+                String nomeLocutor = resultSet.getString("nome_locutor");
 
                 Sorteio sorteio = new Sorteio();
                 Participante participante = new Participante();
@@ -59,14 +67,18 @@ public class SorteioDAO {
                 sorteio.setParticipante(participante);
                 sorteio.setDataSorteio(dataSorteio);
 
+                Locutor locutor = new Locutor(nomeLocutor);
+                sorteio.setLocutor(locutor);
                 ultimosSorteios.add(sorteio);
             }
+
             statement.close();
             conexao.close();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SorteioException(e.getMessage());
         }
+
         return ultimosSorteios;
     }
 

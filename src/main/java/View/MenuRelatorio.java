@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class MenuRelatorio extends javax.swing.JFrame {
 
@@ -19,6 +20,7 @@ public class MenuRelatorio extends javax.swing.JFrame {
         this.controller = new MenuRelatorioController(this);
         controller.importarTabela();
         this.relatorio = new GerarRelatorio(this);
+        centralizarTexto();
 
         // Setar ícone do programa
         Image icon = new ImageIcon(this.getClass().getResource("/images/logo_educadora.png")).getImage();
@@ -37,6 +39,15 @@ public class MenuRelatorio extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
+
+    public void centralizarTexto() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+
+        for (int columnIndex = 0; columnIndex < jTable.getColumnCount(); columnIndex++) {
+            jTable.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
         }
     }
 
@@ -81,11 +92,11 @@ public class MenuRelatorio extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nome", "Bairro", "Data-Hora"
+                "Nome", "Bairro", "Data-Hora", "Locutor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -118,7 +129,7 @@ public class MenuRelatorio extends javax.swing.JFrame {
         });
 
         gerarValeButton.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        gerarValeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/4. sortear.png"))); // NOI18N
+        gerarValeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/15. vale_brinde.png"))); // NOI18N
         gerarValeButton.setText("Gerar Vale-Brinde");
         gerarValeButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         gerarValeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -185,11 +196,8 @@ public class MenuRelatorio extends javax.swing.JFrame {
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
         // TODO add your handling code here:
         System.out.println(controller.tabelaMouseClicked(evt, jTable));
-        controller.getSorteioFromTable(jTable);
     }//GEN-LAST:event_jTableMouseClicked
 
-    
-    
     public static void main(String args[]) {
 
         designTela();

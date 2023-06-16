@@ -1,10 +1,17 @@
 package Controller;
 
 import Controller.Helper.MenuPrincipalHelper;
+import Model.Brinde;
+import Model.DAO.EmpresaReferenciaDAO;
+import Model.DAO.LocutorDAO;
 import Model.DAO.ParticipanteDAO;
+import Model.DAO.ItemDAO;
 import Model.DAO.SorteioDAO;
+import Model.EmpresaReferencia;
 import Model.Exception.ParticipanteException;
 import Model.Exception.SorteioException;
+import Model.Item;
+import Model.Locutor;
 import Model.Participante;
 import Model.Sorteio;
 import View.MenuPrincipal;
@@ -80,7 +87,7 @@ public class MenuPrincipalController {
             }
         }
     }
-
+    
     public void insertParticipante() {
         ParticipanteDAO participanteDAO = new ParticipanteDAO();
 
@@ -132,6 +139,7 @@ public class MenuPrincipalController {
         try {
             if (qtdParticipantes > participantes.size()) {
                 view.mensagemErro("Quantidade informada maior do que o número de participantes.");
+                return null;
             }
 
             // Realizar o sorteio
@@ -140,8 +148,26 @@ public class MenuPrincipalController {
 
             Participante participanteSorteado = sorteados.get(0);
             LocalDateTime dataSorteio = LocalDateTime.now();
-            Sorteio sorteio = new Sorteio(participanteSorteado, dataSorteio);
+            String nomeLocutor = helper.obterNomeLocutor(view.getBoxLocutores());
+            String quantidadeCombo = helper.obterQuantidadeCombo(view.getBoxQuantidade());
+            String descricaoItem = helper.obterItem(view.getBoxItem());
+            String nomeEmpresa = helper.obterEmpresa(view.getBoxEmpresa());
 
+            System.out.println(nomeLocutor);
+            System.out.println(quantidadeCombo);
+            System.out.println(descricaoItem);
+            System.out.println(nomeEmpresa);
+
+            Locutor locutor = new Locutor(nomeLocutor);
+            Item item = new Item(descricaoItem);
+            EmpresaReferencia empresaReferencia = new EmpresaReferencia(nomeEmpresa);
+
+            Brinde brinde = new Brinde();
+            brinde.setItem(item);
+            brinde.setQuantidade(quantidadeCombo);
+            EmpresaReferencia empresaReferencia1 = new EmpresaReferencia(nomeEmpresa);
+
+            Sorteio sorteio = new Sorteio(participanteSorteado, dataSorteio, locutor, brinde, empresaReferencia);
             return sorteio;
         } catch (IndexOutOfBoundsException e) {
             view.mensagemErro("Não há participantes suficientes para realizar o sorteio.");
@@ -170,6 +196,39 @@ public class MenuPrincipalController {
         } catch (SorteioException e) {
             e.printStackTrace();
             view.mensagemErro("Error: " + e.getMessage());
+        }
+    }
+
+    public void carregarLocutoresCadastrados() {
+        LocutorDAO locutorDAO = new LocutorDAO();
+        List<String> locutores = locutorDAO.obterLocutoresCadastrados();
+
+        view.getBoxLocutores().removeAllItems();
+
+        for (String locutor : locutores) {
+            view.getBoxLocutores().addItem(locutor);
+        }
+    }
+
+    public void importarItens() {
+        view.getBoxItem().removeAllItems();
+        ItemDAO produtoSorteadoDAO = new ItemDAO();
+
+        List<String> descricoes = produtoSorteadoDAO.obterDescricoesItens();
+
+        for (String descricao : descricoes) {
+            view.getBoxItem().addItem(descricao);
+        }
+    }
+
+    public void importarEmpresas() {
+        view.getBoxEmpresa().removeAllItems();
+        EmpresaReferenciaDAO empresaReferenciaDAO = new EmpresaReferenciaDAO();
+
+        List<String> empresas = empresaReferenciaDAO.obterNomesEmpresas();
+
+        for (String descricao : empresas) {
+            view.getBoxEmpresa().addItem(descricao);
         }
     }
 }

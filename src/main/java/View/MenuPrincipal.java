@@ -4,10 +4,12 @@ import Controller.MenuPrincipalController;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class MenuPrincipal extends javax.swing.JFrame {
 
@@ -17,6 +19,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
     public MenuPrincipal() {
         initComponents();
         controller = new MenuPrincipalController(this);
+        centralizarTexto();
+
+        // Carregar locutores do banco
+        controller.carregarLocutoresCadastrados();
+        controller.importarItens();
+        controller.importarEmpresas();
 
         // Setar ícone do programa
         Image icon = new ImageIcon(this.getClass().getResource("/images/logo_educadora.png")).getImage();
@@ -35,6 +43,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
+
+    public void centralizarTexto() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+
+        for (int columnIndex = 0; columnIndex < tabelaSorteio.getColumnCount(); columnIndex++) {
+            tabelaSorteio.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
         }
     }
 
@@ -66,6 +83,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBox1 = new javax.swing.JCheckBox();
         labelNome = new javax.swing.JLabel();
         labelBairro = new javax.swing.JLabel();
         fieldNome = new javax.swing.JTextField();
@@ -76,6 +94,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaSorteio = new javax.swing.JTable();
         lbBackground = new javax.swing.JLabel();
+        boxLocutores = new javax.swing.JComboBox<>();
+        boxEmpresa = new javax.swing.JComboBox<>();
+        boxItem = new javax.swing.JComboBox<>();
+        boxQuantidade = new javax.swing.JComboBox<>();
+        lbBrinde = new javax.swing.JLabel();
+        lbLocutor = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuOpcoes = new javax.swing.JMenu();
         menuLimpar = new javax.swing.JMenuItem();
@@ -84,6 +108,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
         menuAjuda = new javax.swing.JMenu();
         menuInfo = new javax.swing.JMenuItem();
         menuUltimosSort = new javax.swing.JMenuItem();
+
+        jCheckBox1.setText("jCheckBox1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("sorteadorEducadora - Tela Principal");
@@ -165,6 +191,28 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         lbBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background_capa.png"))); // NOI18N
 
+        boxLocutores.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        boxEmpresa.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        boxEmpresa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        boxEmpresa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        boxItem.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        boxItem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        boxItem.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        boxQuantidade.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        boxQuantidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        boxQuantidade.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        lbBrinde.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbBrinde.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/13. brinde.png"))); // NOI18N
+        lbBrinde.setText("Brinde");
+
+        lbLocutor.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbLocutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/14. locutor.png"))); // NOI18N
+        lbLocutor.setText("Locutor");
+
         menuOpcoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/6. ajustes.png"))); // NOI18N
         menuOpcoes.setText("Opções");
         menuOpcoes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -230,32 +278,49 @@ public class MenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(152, 152, 152)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77)
-                        .addComponent(sortearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(sairButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(60, 60, 60)
-                                .addComponent(labelNome, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(150, 150, 150)
-                                .addComponent(fieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(226, 226, 226)
-                                .addComponent(labelBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(170, 170, 170))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lbBackground)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(205, 205, 205)
+                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(77, 77, 77)
+                .addComponent(sortearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sairButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(164, 164, 164))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(labelNome, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(labelBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(boxEmpresa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(boxQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(boxItem, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(lbBrinde)))
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(boxLocutores, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lbLocutor)
+                        .addGap(85, 85, 85))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
@@ -270,17 +335,29 @@ public class MenuPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lbBackground)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(fieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(labelNome, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(fieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(30, 30, 30)
+                        .addComponent(fieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(boxLocutores, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbLocutor))
+                        .addGap(18, 18, 18)
+                        .addComponent(fieldBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(boxQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(boxItem, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(boxEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lbBrinde)
+                        .addGap(66, 66, 66)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -374,13 +451,20 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JComboBox<String> boxEmpresa;
+    private javax.swing.JComboBox<String> boxItem;
+    private javax.swing.JComboBox<String> boxLocutores;
+    private javax.swing.JComboBox<String> boxQuantidade;
     private javax.swing.JTextField fieldBairro;
     private javax.swing.JTextField fieldNome;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelBairro;
     private javax.swing.JLabel labelNome;
     private javax.swing.JLabel lbBackground;
+    private javax.swing.JLabel lbBrinde;
+    private javax.swing.JLabel lbLocutor;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenuItem menuImportar;
     private javax.swing.JMenuItem menuInfo;
@@ -424,4 +508,37 @@ public class MenuPrincipal extends javax.swing.JFrame {
     public void setQtdParticipantes(int qtdParticipantes) {
         this.qtdParticipantes = qtdParticipantes;
     }
+
+    public JComboBox<String> getBoxLocutores() {
+        return boxLocutores;
+    }
+
+    public void setBoxLocutores(JComboBox<String> boxLocutores) {
+        this.boxLocutores = boxLocutores;
+    }
+
+    public JComboBox<String> getBoxEmpresa() {
+        return boxEmpresa;
+    }
+
+    public void setBoxEmpresa(JComboBox<String> boxEmpresa) {
+        this.boxEmpresa = boxEmpresa;
+    }
+
+    public JComboBox<String> getBoxItem() {
+        return boxItem;
+    }
+
+    public void setBoxItem(JComboBox<String> boxItem) {
+        this.boxItem = boxItem;
+    }
+
+    public JComboBox<String> getBoxQuantidade() {
+        return boxQuantidade;
+    }
+
+    public void setBoxQuantidade(JComboBox<String> boxQuantidade) {
+        this.boxQuantidade = boxQuantidade;
+    }
+
 }

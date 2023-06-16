@@ -1,9 +1,12 @@
 package Controller.Helper;
 
+import Model.EmpresaReferencia;
+import Model.Item;
 import Model.Participante;
 import View.MenuPrincipal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 
 public class MenuPrincipalHelper {
@@ -55,4 +58,29 @@ public class MenuPrincipalHelper {
         }
         return participantes;
     }
+
+    public String obterNomeLocutor(JComboBox comboBox) {
+        String nomeLocutor = (String) comboBox.getSelectedItem();
+        return nomeLocutor;
+    }
+
+    public String obterQuantidadeCombo(JComboBox comboBox) {
+        String quantidade = (String) comboBox.getSelectedItem();
+        if (quantidade != null) {
+            return quantidade;
+        } else {
+            return "0";
+        }
+    }
+
+    public String obterItem(JComboBox comboBox) {
+        String descricao = (String) comboBox.getSelectedItem();
+        return descricao;
+    }
+
+    public String obterEmpresa(JComboBox comboBox) {
+        String nome = (String) comboBox.getSelectedItem();
+        return nome;
+    }
+
 }

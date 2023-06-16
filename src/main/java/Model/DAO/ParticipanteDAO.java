@@ -42,6 +42,7 @@ public class ParticipanteDAO {
 
             // Fechar as declarações e a conexão com o banco de dados
             conexao.close();
+            stmtInsert.close();
 
         } catch (SQLIntegrityConstraintViolationException e) {
             e.printStackTrace();
