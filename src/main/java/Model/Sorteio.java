@@ -6,7 +6,6 @@ public class Sorteio {
 
     private Integer id;
     private Participante participante;
-    private String ganhador;
     private LocalDateTime dataSorteio;
 
     public Sorteio() {

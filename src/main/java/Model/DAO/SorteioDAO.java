@@ -42,18 +42,20 @@ public class SorteioDAO {
         List<Sorteio> ultimosSorteios = new ArrayList<>();
 
         try {
-            String sql = "SELECT nome_ganhador, data_sorteio FROM sorteio ORDER BY data_sorteio DESC LIMIT ?";
+            String sql = "SELECT nome_ganhador, bairro, data_sorteio FROM sorteio ORDER BY data_sorteio DESC LIMIT ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
             statement.setInt(1, quantidade);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 String nome = resultSet.getString("nome_ganhador");
+                String bairro = resultSet.getString("bairro");
                 LocalDateTime dataSorteio = resultSet.getTimestamp("data_sorteio").toLocalDateTime();
 
                 Sorteio sorteio = new Sorteio();
                 Participante participante = new Participante();
                 participante.setNome(nome);
+                participante.setBairro(bairro);
                 sorteio.setParticipante(participante);
                 sorteio.setDataSorteio(dataSorteio);
 
@@ -67,4 +69,34 @@ public class SorteioDAO {
         }
         return ultimosSorteios;
     }
+
+    public Sorteio findByNomeAndData(String nomeGanhador, String bairro, String dataSorteio) {
+        try {
+            String sql = "SELECT nome_ganhador, bairro, data_sorteio FROM sorteio WHERE nome_ganhador = ? AND bairro = ? AND data_sorteio = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+            statement.setString(1, nomeGanhador);
+            statement.setString(2, bairro);
+            statement.setString(3, dataSorteio);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                Sorteio sorteio = new Sorteio();
+                Participante participante = new Participante();
+                participante.setNome(resultSet.getString("nome_ganhador"));
+                participante.setBairro(resultSet.getString("bairro"));
+                sorteio.setParticipante(participante);
+                sorteio.setDataSorteio(resultSet.getTimestamp("data_sorteio").toLocalDateTime());
+                return sorteio;
+            }
+
+            statement.close();
+            conexao.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SorteioException(e.getMessage());
+        }
+
+        return null;
+    }
+
 }
