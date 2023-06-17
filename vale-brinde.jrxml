@@ -21,22 +21,14 @@
 	<field name="nome_ganhador" class="java.lang.String"/>
 	<field name="bairro" class="java.lang.String"/>
 	<field name="data_sorteio" class="java.lang.String"/>
+	<field name="brinde" class="java.lang.String"/>
+	<field name="nome_locutor" class="java.lang.String"/>
+	<field name="quantidade" class="java.lang.String"/>
+	<field name="empresa_referencia" class="java.lang.String"/>
 	<background>
 		<band height="555" splitType="Stretch">
-			<image>
-				<reportElement x="-20" y="65" width="229" height="250" uuid="20bb2440-c413-4a05-a706-a10d8c847aba">
-					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
-				</reportElement>
-				<imageExpression><![CDATA["flower1.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="-20" y="-20" width="229" height="250" uuid="5a4947cf-88fa-4c35-83d8-b8d2e9d03edc">
-					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
-				</reportElement>
-				<imageExpression><![CDATA["flower1.png"]]></imageExpression>
-			</image>
 			<frame>
-				<reportElement mode="Opaque" x="1" y="539" width="800" height="16" forecolor="#D0B48E" backcolor="#006699" uuid="6f4fe8ef-88ca-4d5d-b46a-054826bb7893"/>
+				<reportElement mode="Opaque" x="1" y="539" width="800" height="16" forecolor="#D0B48E" backcolor="#0056A8" uuid="6f4fe8ef-88ca-4d5d-b46a-054826bb7893"/>
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="753" y="0" width="40" height="16" forecolor="#FFFFFF" uuid="970781d6-87a0-4d3d-a07b-5ae173a1317a"/>
 					<textElement verticalAlignment="Middle">
@@ -59,56 +51,155 @@
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
+			<image>
+				<reportElement x="316" y="460" width="170" height="70" uuid="b6625536-24be-49b5-af8c-06eaac3ef174"/>
+				<imageExpression><![CDATA["logotipo_radio_horizontal.png"]]></imageExpression>
+			</image>
 		</band>
 	</background>
 	<title>
-		<band height="94" splitType="Stretch">
+		<band height="116" splitType="Stretch">
 			<staticText>
-				<reportElement style="SubTitle" x="336" y="65" width="449" height="29" uuid="0dae0af3-dd1d-4b42-b346-386af21f0689"/>
-				<textElement textAlignment="Right">
-					<font size="22" isBold="false"/>
+				<reportElement x="181" y="10" width="440" height="90" forecolor="#030303" uuid="54fda741-4e6c-48d9-bda9-53ee98d36a30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Segoe UI" size="65" isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[SORTEIO EDUCADORA]]></text>
+				<text><![CDATA[VALE-BRINDE]]></text>
 			</staticText>
-			<frame>
-				<reportElement mode="Opaque" x="-20" y="0" width="822" height="65" forecolor="#006699" backcolor="#006699" uuid="83f5e806-cc04-4161-87a9-07633f604bc1"/>
-				<staticText>
-					<reportElement style="Title" x="231" y="0" width="578" height="65" uuid="f5cd9ee0-5caa-4e48-8946-c7e84d82a845"/>
-					<textElement textAlignment="Right">
-						<font size="54" isBold="false"/>
-					</textElement>
-					<text><![CDATA[VALE-BRINDE]]></text>
-				</staticText>
-			</frame>
 		</band>
 	</title>
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="14" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<frame>
 				<reportElement x="227" y="0" width="575" height="14" uuid="2a3d298d-90eb-4db1-919a-c9b2ed28c222"/>
 			</frame>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="109">
+		<band height="348">
 			<textField>
-				<reportElement x="266" y="10" width="270" height="20" uuid="8e1fe1c0-8607-40f9-9f57-4a18acba6fa0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="350" y="10" width="366" height="45" uuid="8e1fe1c0-8607-40f9-9f57-4a18acba6fa0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_ganhador}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="266" y="44" width="270" height="20" uuid="6a0986ba-b54c-4758-9f42-c0c3c7c4b44d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="350" y="70" width="366" height="44" uuid="6a0986ba-b54c-4758-9f42-c0c3c7c4b44d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="266" y="84" width="270" height="20" uuid="e76a826f-621e-4cb8-a6b6-348ad9414a3c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{data_sorteio}]]></textFieldExpression>
+				<reportElement x="350" y="250" width="367" height="44" uuid="e76a826f-621e-4cb8-a6b6-348ad9414a3c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_locutor}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="90" y="10" width="256" height="51" uuid="c3caa46a-91b0-443b-afa2-e08b75380950"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<text><![CDATA[Nome Ganhador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="70" width="256" height="51" uuid="fb5278df-a811-4958-be8a-76c48a4b8388"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="250" width="256" height="51" uuid="4319cfbf-a2bb-4f7a-bc0e-d1b05e3d232e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<text><![CDATA[Locutor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="130" width="256" height="51" uuid="3c47faec-02f9-47df-8e7c-87477ba2fdeb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<text><![CDATA[Prêmio:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="350" y="120" width="366" height="1" uuid="5e740811-f397-4993-b039-c766c4983a48">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="350" y="60" width="366" height="1" uuid="0ea276af-54d6-4e5d-9d4d-e39c187d4733">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="350" y="180" width="367" height="1" uuid="41f6a4b3-ee06-4585-ae9a-d09002cbad8c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="350" y="130" width="367" height="44" uuid="ec881dad-d1ec-4d90-9e76-0f438e62245f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade} + ' ' + $F{brinde}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="90" y="190" width="256" height="51" uuid="1b0d5cdb-be3a-4715-af4f-b7334b4cc40c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<text><![CDATA[Referência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="350" y="190" width="367" height="45" uuid="ff89dbfa-20f7-4e9b-ac82-86c96c6ed469"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_referencia}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="350" y="240" width="367" height="1" uuid="1cf912eb-c1ba-411c-9994-6d180687ad8c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="350" y="300" width="367" height="1" uuid="f1f7421f-5821-4e15-8200-4c01e5838a2f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
 		</band>
 	</detail>
 	<columnFooter>

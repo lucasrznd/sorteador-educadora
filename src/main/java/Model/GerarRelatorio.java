@@ -3,6 +3,9 @@ package Model;
 import Model.DAO.Banco;
 import Model.DAO.SorteioDAO;
 import View.MenuRelatorio;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,18 +66,25 @@ public class GerarRelatorio {
                 String arquivoJasper = "vale-brinde.jrxml";
                 JasperReport relatorio = JasperCompileManager.compileReport("vale-brinde.jrxml");
 
+                String quantidade = sorteio.getBrinde().getQuantidade();
+                String brinde = sorteio.getBrinde().getItem().getDescricao();
+                String brindeConcatenado = quantidade + " - " + brinde;
+
                 // Cria os parâmetros do relatório
                 Map<String, Object> parametros = new HashMap<>();
                 parametros.put("nome_ganhador", sorteio.getParticipante().getNome());
                 parametros.put("bairro", sorteio.getParticipante().getBairro());
                 parametros.put("data_sorteio", sorteio.getDataSorteio());
+                parametros.put("nome_locutor", sorteio.getLocutor().getNome());
+                parametros.put("brinde", brindeConcatenado);
+                parametros.put("empresa_referencia", sorteio.getEmpresaReferencia().getNome());
 
                 // Realiza a consulta para obter os dados do Sorteio
                 SorteioDAO sorteioDAO = new SorteioDAO();
                 Sorteio sorteioEncontrado = sorteioDAO.findByNomeAndData(sorteio.getParticipante().getNome(), sorteio.getParticipante().getBairro(), sorteio.getDataSorteio().toString());
 
                 // Cria o ResultSet com os dados encontrados
-                ResultSet resultSet = createResultSet(sorteioEncontrado);
+                ResultSet resultSet = createResultSet(sorteioEncontrado.getParticipante().getNome(), sorteioEncontrado.getParticipante().getBairro(), sorteioEncontrado.getDataSorteio());
 
                 // Cria o JRResultSetDataSource com o ResultSet
                 JRDataSource dataSource = new JRResultSetDataSource(resultSet);
@@ -86,6 +96,15 @@ public class GerarRelatorio {
                 String nomeParticipante = sorteioEncontrado.getParticipante().getNome();
                 String arquivoPDF = personalizarNomeArquivo(nomeParticipante);
                 JasperExportManager.exportReportToPdfFile(jasperPrint, arquivoPDF);
+
+                try {
+                    File file = new File(arquivoPDF);
+                    if (file.exists()) {
+                        Desktop.getDesktop().open(file);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 view.mensagemSimples("Vale-Brinde gerado com sucesso.");
             } catch (JRException e) {
@@ -112,16 +131,16 @@ public class GerarRelatorio {
         return arquivoPDF;
     }
 
-    private ResultSet createResultSet(Sorteio sorteio) {
+    private ResultSet createResultSet(String nomeGanhador, String bairro, LocalDateTime dataSorteio) {
         try {
             // Construa a conexão com o banco de dados
 
             // Crie a consulta SQL com base nos dados do Sorteio
-            String sql = "SELECT nome_ganhador, bairro, data_sorteio FROM sorteio WHERE nome_ganhador = ? AND bairro = ? AND data_sorteio = ?";
+            String sql = "SELECT nome_ganhador, bairro, data_sorteio, nome_locutor, brinde, quantidade, empresa_referencia FROM sorteio WHERE nome_ganhador = ? AND bairro = ? AND data_sorteio = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
-            statement.setString(1, sorteio.getParticipante().getNome());
-            statement.setString(2, sorteio.getParticipante().getBairro());
-            statement.setString(3, sorteio.getDataSorteio().toString());
+            statement.setString(1, nomeGanhador);
+            statement.setString(2, bairro);
+            statement.setString(3, dataSorteio.toString());
 
             // Execute a consulta e retorne o ResultSet
             return statement.executeQuery();

@@ -4,6 +4,10 @@ public class Locutor {
 
     private Integer id;
     private String nome;
+    
+    public Locutor() {
+        
+    }
 
     public Locutor(Integer id, String nome) {
         this.id = id;

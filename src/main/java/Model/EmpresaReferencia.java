@@ -4,6 +4,10 @@ public class EmpresaReferencia {
 
     private Integer id;
     private String nome;
+    
+    public EmpresaReferencia() {
+        
+    }
 
     public EmpresaReferencia(Integer id, String nome) {
         this.id = id;

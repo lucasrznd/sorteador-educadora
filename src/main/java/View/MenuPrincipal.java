@@ -15,6 +15,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private final MenuPrincipalController controller;
     private int qtdParticipantes;
+    private MenuRelatorio menuRelatorio = new MenuRelatorio();
 
     public MenuPrincipal() {
         initComponents();
@@ -105,6 +106,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         menuLimpar = new javax.swing.JMenuItem();
         menuSalvar = new javax.swing.JMenuItem();
         menuImportar = new javax.swing.JMenuItem();
+        menuVale = new javax.swing.JMenuItem();
         menuAjuda = new javax.swing.JMenu();
         menuInfo = new javax.swing.JMenuItem();
         menuUltimosSort = new javax.swing.JMenuItem();
@@ -244,6 +246,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
         menuOpcoes.add(menuImportar);
+
+        menuVale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/16.vale-brinde-menu.png"))); // NOI18N
+        menuVale.setText("Gerar Vale-Brinde");
+        menuVale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuValeActionPerformed(evt);
+            }
+        });
+        menuOpcoes.add(menuVale);
 
         jMenuBar1.add(menuOpcoes);
 
@@ -439,6 +450,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldNomeActionPerformed
 
+    private void menuValeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuValeActionPerformed
+        // TODO add your handling code here:
+        menuRelatorio.setVisible(true);
+    }//GEN-LAST:event_menuValeActionPerformed
+
     public static void main(String args[]) {
 
         designTela();
@@ -472,6 +488,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu menuOpcoes;
     private javax.swing.JMenuItem menuSalvar;
     private javax.swing.JMenuItem menuUltimosSort;
+    private javax.swing.JMenuItem menuVale;
     private javax.swing.JButton sairButton;
     private javax.swing.JButton sortearButton;
     private javax.swing.JTable tabelaSorteio;

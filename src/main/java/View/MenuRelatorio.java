@@ -18,7 +18,7 @@ public class MenuRelatorio extends javax.swing.JFrame {
     public MenuRelatorio() {
         initComponents();
         this.controller = new MenuRelatorioController(this);
-        controller.importarTabela();
+        controller.atualizarTabela();
         this.relatorio = new GerarRelatorio(this);
         centralizarTexto();
 
@@ -81,8 +81,11 @@ public class MenuRelatorio extends javax.swing.JFrame {
         labelNome = new javax.swing.JLabel();
         fieldNome = new javax.swing.JTextField();
         gerarValeButton = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        menuAjuda = new javax.swing.JMenu();
+        menuRefresh = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("sorteadorEducadora - Gerar Vale-Brinde");
         setResizable(false);
 
@@ -138,6 +141,22 @@ public class MenuRelatorio extends javax.swing.JFrame {
             }
         });
 
+        menuAjuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/8. ajuda.png"))); // NOI18N
+        menuAjuda.setText("Ajuda");
+
+        menuRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/17. refresh.png"))); // NOI18N
+        menuRefresh.setText("Atualizar");
+        menuRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRefreshActionPerformed(evt);
+            }
+        });
+        menuAjuda.add(menuRefresh);
+
+        jMenuBar1.add(menuAjuda);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,7 +189,7 @@ public class MenuRelatorio extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(fieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
-                .addComponent(gerarValeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                .addComponent(gerarValeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(37, 37, 37)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -198,6 +217,11 @@ public class MenuRelatorio extends javax.swing.JFrame {
         System.out.println(controller.tabelaMouseClicked(evt, jTable));
     }//GEN-LAST:event_jTableMouseClicked
 
+    private void menuRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRefreshActionPerformed
+        // TODO add your handling code here:
+        controller.atualizarTabela();
+    }//GEN-LAST:event_menuRefreshActionPerformed
+
     public static void main(String args[]) {
 
         designTela();
@@ -211,10 +235,13 @@ public class MenuRelatorio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField fieldNome;
     private javax.swing.JButton gerarValeButton;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
     private javax.swing.JLabel labelNome;
     private javax.swing.JLabel lbBackground;
+    private javax.swing.JMenu menuAjuda;
+    private javax.swing.JMenuItem menuRefresh;
     // End of variables declaration//GEN-END:variables
 
     public JTextField getFieldNome() {

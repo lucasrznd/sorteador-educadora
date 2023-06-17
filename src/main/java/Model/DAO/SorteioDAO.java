@@ -1,6 +1,9 @@
 package Model.DAO;
 
+import Model.Brinde;
+import Model.EmpresaReferencia;
 import Model.Exception.SorteioException;
+import Model.Item;
 import Model.Locutor;
 import Model.Participante;
 import Model.Sorteio;
@@ -84,7 +87,7 @@ public class SorteioDAO {
 
     public Sorteio findByNomeAndData(String nomeGanhador, String bairro, String dataSorteio) {
         try {
-            String sql = "SELECT nome_ganhador, bairro, data_sorteio FROM sorteio WHERE nome_ganhador = ? AND bairro = ? AND data_sorteio = ?";
+            String sql = "SELECT nome_ganhador, bairro, data_sorteio, nome_locutor, brinde, quantidade, empresa_referencia FROM sorteio WHERE nome_ganhador = ? AND bairro = ? AND data_sorteio = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
             statement.setString(1, nomeGanhador);
             statement.setString(2, bairro);
@@ -98,9 +101,26 @@ public class SorteioDAO {
                 participante.setBairro(resultSet.getString("bairro"));
                 sorteio.setParticipante(participante);
                 sorteio.setDataSorteio(resultSet.getTimestamp("data_sorteio").toLocalDateTime());
+
+                // Adicione as informações adicionais do sorteio
+                Locutor locutor = new Locutor();
+                locutor.setNome(resultSet.getString("nome_locutor"));
+                sorteio.setLocutor(locutor);
+
+                Brinde brinde = new Brinde();
+                Item item = new Item();
+                item.setDescricao(resultSet.getString("brinde"));
+                brinde.setItem(item);
+                brinde.setQuantidade(resultSet.getString("quantidade"));
+                sorteio.setBrinde(brinde);
+
+                EmpresaReferencia empresaReferencia = new EmpresaReferencia();
+                empresaReferencia.setNome(resultSet.getString("empresa_referencia"));
+                sorteio.setEmpresaReferencia(empresaReferencia);
+
                 return sorteio;
             }
-
+            
             statement.close();
             conexao.close();
         } catch (SQLException e) {

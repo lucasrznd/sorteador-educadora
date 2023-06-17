@@ -3,6 +3,7 @@ package Controller;
 import Controller.Helper.MenuRelatorioHelper;
 import Model.DAO.SorteioDAO;
 import Model.Exception.ParticipanteException;
+import Model.Exception.SorteioException;
 import Model.Sorteio;
 import View.MenuRelatorio;
 import java.awt.event.MouseEvent;
@@ -24,24 +25,22 @@ public class MenuRelatorioController {
         this.tableModel = helper.obterTabela();
     }
 
-    public void importarTabela() {
-        if (tableModel.getRowCount() > 0) {
-            view.mensagemAviso("Os dados já foram importados.");
-            return;
-        } else {
-            try {
-                // Obter os nomes e bairros da tabela "participantes" do banco de dados
-                SorteioDAO sorteioDAO = new SorteioDAO();
-                List<Sorteio> sorteados = sorteioDAO.obterUltimosSorteios(10);
+    public void atualizarTabela() {
+        // Limpe os dados existentes na tabela
+        tableModel.setRowCount(0);
 
-                // Adicionar os nomes e bairros à jTable
-                for (Sorteio sorteio : sorteados) {
-                    tableModel.addRow(new Object[]{sorteio.getParticipante().getNome(), sorteio.getParticipante().getBairro(),
-                        sorteio.getDataSorteio(), sorteio.getLocutor().getNome()});
-                }
-            } catch (ParticipanteException e) {
-                view.mensagemErro(e.getMessage());
+        try {
+            // Obtenha os últimos sorteios da sorteioDAO
+            SorteioDAO sorteioDAO = new SorteioDAO();
+            List<Sorteio> ultimosSorteios = sorteioDAO.obterUltimosSorteios(10);
+
+            // Atualize a tabela com os dados obtidos
+            for (Sorteio sorteio : ultimosSorteios) {
+                Object[] rowData = {sorteio.getParticipante().getNome(), sorteio.getParticipante().getBairro(), sorteio.getDataSorteio(), sorteio.getLocutor().getNome()};
+                tableModel.addRow(rowData);
             }
+        } catch (SorteioException e) {
+            view.mensagemErro(e.getMessage());
         }
     }
 
