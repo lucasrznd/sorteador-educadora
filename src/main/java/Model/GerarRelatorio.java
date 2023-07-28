@@ -56,14 +56,21 @@ public class GerarRelatorio {
 
     public void gerarRelatorioPDF() {
         JTable table = view.getjTable();
-        // Obtém o Sorteio com base nos dados da tabela
         Sorteio sorteio = getSorteioFromTable(table);
 
         // Verifica se foi encontrado um Sorteio válido
         if (sorteio != null) {
             try {
-                // Carrega o arquivo Jasper
-                String arquivoJasper = "vale-brinde.jrxml";
+
+                String arquivoJasper;
+                if (System.getProperty("netbeans.home") != null) {
+                    // Executando no NetBeans
+                    arquivoJasper = "vale-brinde.jrxml";
+                } else {
+                    // Executando no JAR compilado
+                    arquivoJasper = "/vale-brinde.jrxml";
+                }
+
                 JasperReport relatorio = JasperCompileManager.compileReport("vale-brinde.jrxml");
 
                 String quantidade = sorteio.getBrinde().getQuantidade();
@@ -100,12 +107,15 @@ public class GerarRelatorio {
                 try {
                     File file = new File(arquivoPDF);
                     if (file.exists()) {
+                        File directory = file.getParentFile();
+                        Desktop.getDesktop().open(directory);
+
                         Desktop.getDesktop().open(file);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    view.mensagemErro("Não foi possível gerar Vale: " + e.getMessage());
                 }
-
                 view.mensagemSimples("Vale-Brinde gerado com sucesso.");
             } catch (JRException e) {
                 e.printStackTrace();
@@ -131,11 +141,8 @@ public class GerarRelatorio {
         return arquivoPDF;
     }
 
-    private ResultSet createResultSet(String nomeGanhador, String bairro, LocalDateTime dataSorteio) {
+    public ResultSet createResultSet(String nomeGanhador, String bairro, LocalDateTime dataSorteio) {
         try {
-            // Construa a conexão com o banco de dados
-
-            // Crie a consulta SQL com base nos dados do Sorteio
             String sql = "SELECT nome_ganhador, bairro, data_sorteio, nome_locutor, brinde, quantidade, empresa_referencia FROM sorteio WHERE nome_ganhador = ? AND bairro = ? AND data_sorteio = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
             statement.setString(1, nomeGanhador);
@@ -147,7 +154,6 @@ public class GerarRelatorio {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

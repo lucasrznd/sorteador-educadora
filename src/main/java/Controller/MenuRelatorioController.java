@@ -2,7 +2,6 @@ package Controller;
 
 import Controller.Helper.MenuRelatorioHelper;
 import Model.DAO.SorteioDAO;
-import Model.Exception.ParticipanteException;
 import Model.Exception.SorteioException;
 import Model.Sorteio;
 import View.MenuRelatorio;

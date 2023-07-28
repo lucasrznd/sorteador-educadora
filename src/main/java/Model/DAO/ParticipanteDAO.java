@@ -13,20 +13,20 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class ParticipanteDAO {
-
+    
     private final Banco banco = new Banco();
     private Connection conexao;
-
+    
     public ParticipanteDAO() {
         this.conexao = banco.conectar();
     }
-
+    
     public void insert(DefaultTableModel tableModel) {
         try {
             // Preparar a declaração SQL para inserção do participante
             String insertQuery = "INSERT INTO participante (nome, bairro) VALUES (?, ?)";
             PreparedStatement stmtInsert = conexao.prepareStatement(insertQuery);
-
+            
             int rowCount = tableModel.getRowCount();
 
             // Inserir cada nome no banco de dados
@@ -43,7 +43,7 @@ public class ParticipanteDAO {
             // Fechar as declarações e a conexão com o banco de dados
             conexao.close();
             stmtInsert.close();
-
+            
         } catch (SQLIntegrityConstraintViolationException e) {
             e.printStackTrace();
             throw new ParticipanteException("Erro de violação de restrição de integridade ao inserir participante.");
@@ -54,15 +54,15 @@ public class ParticipanteDAO {
             e.printStackTrace();
             throw new ParticipanteException("Erro ao inserir participante");
         }
-
+        
     }
-
+    
     public void verificarDuplicidade(DefaultTableModel tableModel) {
         try {
             // Preparar a declaração SQL para verificação de duplicidade
             String verificaDuplicidade = "SELECT COUNT(*) FROM participante WHERE nome = ? AND bairro = ?";
             PreparedStatement stmtDuplicidade = conexao.prepareStatement(verificaDuplicidade);
-
+            
             int rowCount = tableModel.getRowCount();
 
             // Inserir cada nome no banco de dados
@@ -88,13 +88,13 @@ public class ParticipanteDAO {
             e.printStackTrace();
         }
     }
-
+    
     public void update(DefaultTableModel tableModel) {
         try {
             // Preparar a declaração SQL para atualização do participante
             String updateQuery = "UPDATE participante SET nome = ?, bairro = ? WHERE id = ?";
             PreparedStatement stmtUpdate = conexao.prepareStatement(updateQuery);
-
+            
             int rowCount = tableModel.getRowCount();
 
             // Atualizar cada participante no banco de dados
@@ -102,7 +102,7 @@ public class ParticipanteDAO {
                 String nome = (String) tableModel.getValueAt(i, 0);
                 String bairro = (String) tableModel.getValueAt(i, 1);
                 int id = (int) tableModel.getValueAt(i, 2);
-
+                
                 stmtUpdate.setString(1, nome);
                 stmtUpdate.setString(2, bairro);
                 stmtUpdate.setInt(3, id);
@@ -118,17 +118,17 @@ public class ParticipanteDAO {
             throw new ParticipanteException("Erro ao atualizar participante.");
         }
     }
-
+    
     public List<Participante> obterParticipantes() {
         List<Participante> participantes = new ArrayList<>();
         try {
             Statement stmt = conexao.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM participante");
-
+            
             while (rs.next()) {
                 String nome = rs.getString("nome");
                 String bairro = rs.getString("bairro");
-
+                
                 participantes.add(new Participante(nome, bairro));
             }
             rs.close();
@@ -138,5 +138,21 @@ public class ParticipanteDAO {
             e.printStackTrace();
         }
         return participantes;
+    }
+    
+    public void deleteByName(String name) {
+        PreparedStatement st = null;
+        
+        try {
+            st = conexao.prepareStatement("DELETE FROM participante WHERE nome = ?");
+            
+            st.setString(1, name);
+            int rows = st.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            banco.closeStatement(st);
+        }
     }
 }

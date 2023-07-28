@@ -15,10 +15,12 @@ import Model.Locutor;
 import Model.Participante;
 import Model.Sorteio;
 import View.MenuPrincipal;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class MenuPrincipalController {
@@ -103,6 +105,12 @@ public class MenuPrincipalController {
                 view.mensagemErro("Error: " + e.getMessage());
             }
         }
+    }
+    
+    public void deletarParticipante(MouseEvent evt, JTable table) {
+        String name = tabelaMouseClicked(evt, table);
+        ParticipanteDAO participanteDAO = new ParticipanteDAO();
+        participanteDAO.deleteByName(name);
     }
 
     public void insertSorteio() {
@@ -231,4 +239,20 @@ public class MenuPrincipalController {
             view.getBoxEmpresa().addItem(descricao);
         }
     }
+    
+    public String tabelaMouseClicked(MouseEvent evt, JTable table) {
+        int row = table.getSelectedRow();
+        String nomeSelecionado = null;
+
+        if (row >= 0) {
+            int colunaNome = table.getColumn("Nome").getModelIndex();
+            int colunaBairro = table.getColumn("Bairro").getModelIndex();
+            nomeSelecionado = table.getValueAt(row, colunaNome).toString();
+            String bairroSelecionado = table.getValueAt(row, colunaBairro).toString();
+            view.getFieldNome().setText(nomeSelecionado);
+            view.getFieldBairro().setText(bairroSelecionado);
+        }
+        return nomeSelecionado;
+    }
+   
 }

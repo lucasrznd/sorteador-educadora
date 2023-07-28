@@ -189,6 +189,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         ));
         tabelaSorteio.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tabelaSorteio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaSorteioMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaSorteio);
 
         lbBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background_capa.png"))); // NOI18N
@@ -293,7 +298,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addComponent(lbBackground)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(205, 205, 205)
+                .addGap(202, 202, 202)
                 .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(77, 77, 77)
                 .addComponent(sortearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -454,6 +459,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         menuRelatorio.setVisible(true);
     }//GEN-LAST:event_menuValeActionPerformed
+
+    private void tabelaSorteioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaSorteioMouseClicked
+        // TODO add your handling code here:
+        controller.tabelaMouseClicked(evt, tabelaSorteio);
+    }//GEN-LAST:event_tabelaSorteioMouseClicked
 
     public static void main(String args[]) {
 

@@ -120,7 +120,7 @@ public class SorteioDAO {
 
                 return sorteio;
             }
-            
+
             statement.close();
             conexao.close();
         } catch (SQLException e) {
