@@ -1,55 +1,72 @@
-# Aplicação de Sorteios
+<h2 align="center">Prize Drawer with Java Swing</h2>
 
-A Aplicação de Sorteios é uma aplicação desktop desenvolvida em Java Swing para realizar sorteios simples. Permite adicionar participantes, escolher brindes, selecionar o locutor e realizar sorteios de forma fácil e rápida.
+<div align="center">
 
-## Funcionalidades
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+</div>
 
-- **Cadastro de Participantes**: Adicione nomes e bairros dos participantes em uma tabela.
-- **Escolha de Brindes**: Selecione entre os brindes disponíveis para o sorteio.
-- **Seleção de Locutor**: Escolha quem será o locutor responsável pelo sorteio.
-- **Realização de Sorteios**: Execute o sorteio dos participantes e visualize o nome do ganhador na tela.
-- **Geração de Vale-Brinde**: Crie um relatório utilizando o JasperReports contendo informações sobre o sorteio realizado.
+<p align="center">
+ <a href="#description">Description</a> • 
+ <a href="#features">Features</a> • 
+ <a href="#installation">Installation</a> •
+ <a href="#contribution">Contribution</a> 
+</p>
 
-## Tecnologias Utilizadas
+<h2 id="description">📙 Description</h2>
+This App is a desktop application developed in Java Swing to conduct simple raffles. It allows adding participants, choosing prizes, selecting the announcer, and conducting raffles easily and quickly.
 
-- **Java Swing**: Biblioteca gráfica para a criação de interfaces de usuário em Java.
-- **MySQL**: Banco de dados utilizado para armazenar os dados dos participantes e dos sorteios.
-- **JasperReports**: Ferramenta de geração de relatórios para Java.
+<h2 id="features">✨ Features</h2>
 
-## Pré-requisitos
+- **Participant Registration**: Add names and neighborhoods of participants to a table.
+- **Prize Selection**: Choose from the available prizes for the raffle.
+- **Announcer Selection**: Choose who will be the announcer responsible for the raffle.
+- **Raffle Execution**: Execute the raffle of participants and view the winner's name on the screen.
+- **Gift Voucher Generation**: Create a report using JasperReports containing information about the conducted raffle.
 
-- Java Development Kit 20 (JDK) instalado
-- MySQL Server instalado e configurado
-- Bibliotecas JasperReports adicionadas ao projeto
+### Technologies Used
 
-## Instalação e Configuração
+- **Java Swing**: Graphic library for creating user interfaces in Java.
+- **MySQL**: Database used to store participant and raffle data.
+- **JasperReports**: Reporting tool for Java.
 
-1. Clone este repositório: `git clone https://github.com/lucasrznd/sorteador-educadora.git`
-2. Importe o projeto em sua IDE Java (Recomendo NetBeans).
-3. Configure as credenciais do banco de dados no arquivo de conexão.
-4. Certifique-se de que as bibliotecas JasperReports estão configuradas corretamente.
+### Prerequisites
 
-## Uso
+- Java Development Kit 20 (JDK) installed
+- MySQL Server installed and configured
+- JasperReports libraries added to the project
 
-1. Execute a aplicação.
-2. Adicione participantes à tabela.
-3. Escolha o brinde e o locutor.
-4. Realize o sorteio clicando no botão correspondente.
-5. Gere o Vale-Brinde quando necessário.
+<h2 id="installation">🛠️ Installation</h2>
 
-## Contribuindo
+1. Clone this repository: git clone https://github.com/lucasrznd/sorteador-educadora.git
+2. Import the project into your Java IDE (I recommend NetBeans).
+3. Configure the **database credentials** in the connection file.
+4. Ensure that the **JasperReports** libraries are correctly configured.
 
-Contribuições são bem-vindas! Se deseja contribuir com o projeto, siga estes passos:
+### Usage
 
-1. Faça um fork do repositório.
-2. Crie uma branch para sua feature: `git checkout -b feature-nova`.
-3. Faça commit das suas mudanças: `git commit -am 'Adiciona nova feature'`.
-4. Faça push para a branch: `git push origin feature-nova`.
-5. Abra um Pull Request.
+1. Run the application.
+2. Add participants to the table.
+3. Choose the prize and the announcer.
+4. Conduct the raffle by clicking on the corresponding button.
+5. Generate the Gift Voucher when necessary.
 
-## Telas
+### Screens
 
 <div>
-  <img src="https://github.com/lucasrznd/sorteador-educadora/blob/main/src/main/resources/images/readme/1.%20view-principal.png" width="500px" />
-  <img src="https://github.com/lucasrznd/sorteador-educadora/blob/main/src/main/resources/images/readme/3.%20view-valebrinde.png" width="500px" height="375px" />
+  <img src="https://github.com/lucasrznd/sorteador-educadora/blob/main/src/main/resources/images/readme/1.%20view-principal.png" width="400px" />
+  <img src="https://github.com/lucasrznd/sorteador-educadora/blob/main/src/main/resources/images/readme/3.%20view-valebrinde.png" width="400px" height="295px" />
 </div>
+
+<h2 id="contribution">🤝 Contribution</h2>
+
+Contributions are welcome! If you have suggestions, improvements, or find bugs, feel free to open an issue or submit a pull request.
+
+<h2 id="author">👨🏻‍💻 Author</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lucasrznd"><img src="https://avatars.githubusercontent.com/u/101664450?v=4&v=" width="115px;" alt="Lucas Rezende"/><br /><sub><b>Lucas Rezende</b></sub></a><br/><a title="Código">💻</a></td>
+  </tbody>
+</table>
+
